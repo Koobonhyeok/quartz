@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class QuartzServiceImpl implements QuartzService {
-
+ 
 	@Override
 	public void quartzService() {
 		try {

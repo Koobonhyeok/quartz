@@ -11,7 +11,7 @@ public class QuartzJob extends QuartzJobBean {
 	
 	@Override
 	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-		try {
+		try { 
 			service = ((ApplicationContext) context.getScheduler().getContext().get("applicationContext")).getBean(QuartzService.class);
 			service.quartzService();
         } catch (Exception e) {
