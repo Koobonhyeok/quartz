@@ -2,7 +2,7 @@ package com.study.quartz.service;
 
 import org.springframework.stereotype.Service;
 
-@Service("quartzService")
+@Service
 public class QuartzServiceImpl implements QuartzService {
 
 	@Override

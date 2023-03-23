@@ -4,13 +4,14 @@
     xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://mybatis.org/schema/mybatis-spring https://mybatis.org/schema/mybatis-spring.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+	<!-- applicationContext는 생성 정보와 연관관계 정보에 대한 설정을 읽어 처리해준다. -->
+
     <mvc:annotation-driven/>
+    
+    <context:component-scan base-package="com.study.quartz" />
 
-    <context:component-scan base-package="com.study.quartz">
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-    </context:component-scan>
-
-<!--     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource"> -->
+<!-- 	 	DB 연결시 사용   -->
+<!--    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource"> -->
 <!--         <property name="driverClass" value="com.mysql.jdbc.Driver"/> -->
 <!--         <property name="connectionProperties"> -->
 <!--             <value>zeroDateTimeBehavior=convertToNull</value> -->
@@ -43,17 +44,9 @@
 <!--         </tx:attributes> -->
 <!--     </tx:advice> -->
 
-<!--     <aop:config> -->
-<!--         <aop:pointcut id="requiredTx" expression="execution(* blog.in.action.service.impl.*Impl.*(..))"/> -->
-<!--         <aop:advisor advice-ref="txAdvice" pointcut-ref="requiredTx"/> -->
-<!--     </aop:config> -->
-
-<!--     <mapper:scan base-package="blog.in.action.dao"/> -->
-
     <bean name="quartzJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
         <property name="jobClass" value="com.study.quartz.service.QuartzJob"/>
-        <property name="durability" value="true"/>
-<!--         <property name="group" value="BLOG_GROUP"/> -->
+<!--         <property name="durability" value="true"/> -->
     </bean>
 
     <bean id="quartzCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -68,10 +61,13 @@
             </list>
         </property>
 <!--         <property name="dataSource" ref="dataSource"/> -->
+		<!-- Job에서 applicationContext를 읽을 수 있게 해주는 설정 값 -->
         <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
         <property name="autoStartup" value="true"/>
         <property name="overwriteExistingJobs" value="true"/>
         <property name="waitForJobsToCompleteOnShutdown" value="true"/>
+        <!-- 만약 DB가 연결 되어 있다면 아래에 주석을 풀고 사용한다. -->
+        <!-- Quartz가 DB기반으로 clustering으로 동작할 수 있도록 한다. -->
 <!--         <property name="quartzProperties"> -->
 <!--             <props> -->
 <!--                 <prop key="org.quartz.jobStore.class">org.quartz.impl.jdbcjobstore.JobStoreTX</prop> -->
